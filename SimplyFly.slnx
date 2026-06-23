@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="SimplyFly.API/SimplyFly.API.csproj" />
+  <Project Path="SimplyFly.Tests/SimplyFly.Tests.csproj" Id="fe2e8420-ff6e-41db-9e9f-b4e8290970f9" />
+</Solution>

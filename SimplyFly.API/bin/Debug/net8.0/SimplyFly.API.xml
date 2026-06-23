@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SimplyFly.API</name>
+    </assembly>
+    <members>
+        <member name="M:SimplyFly.API.Controllers.BookingsController.BookFlight(SimplyFly.API.DTOs.BookFlightDto)">
+            <summary>
+            Books a flight for the logged-in passenger
+            </summary>
+        </member>
+        <member name="M:SimplyFly.API.Controllers.BookingsController.GetBookingHistory">
+            <summary>
+            Get all booking history for the logged-in passenger
+            </summary>
+        </member>
+        <member name="M:SimplyFly.API.Controllers.BookingsController.CancelBooking(System.Int32)">
+            <summary>
+            Cancels a booking for the logged-in passenger. Only bookings with status "Booked" can be cancelled.
+            </summary>
+        </member>
+        <member name="M:SimplyFly.API.Controllers.FlightsController.AddFlight(SimplyFly.API.DTOs.AddFlightDto)">
+            <summary>
+            Adds a new flight
+            </summary>
+        </member>
+        <member name="M:SimplyFly.API.Controllers.UsersController.Register(SimplyFly.API.DTOs.RegisterUserDto)">
+            <summary>
+            Registers a new user in the system
+            </summary>
+            <param name="dto">User registration details</param>
+            <returns>Returns created user details</returns>
+        </member>
+        <member name="M:SimplyFly.API.Controllers.UsersController.Login(SimplyFly.API.DTOs.LoginUserDto)">
+            <summary>
+            Authenticates a user and generates JWT token
+            </summary>
+            <param name="dto">User login credentials</param>
+            <returns>Returns JWT token if login is successful</returns>
+        </member>
+        <member name="T:SimplyFly.API.Migrations.InitialCreate">
+            <inheritdoc />
+        </member>
+        <member name="M:SimplyFly.API.Migrations.InitialCreate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:SimplyFly.API.Migrations.InitialCreate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:SimplyFly.API.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:SimplyFly.API.Migrations.AddFlightBookingPaymentTables">
+            <inheritdoc />
+        </member>
+        <member name="M:SimplyFly.API.Migrations.AddFlightBookingPaymentTables.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:SimplyFly.API.Migrations.AddFlightBookingPaymentTables.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:SimplyFly.API.Migrations.AddFlightBookingPaymentTables.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>
