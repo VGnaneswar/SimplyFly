@@ -73,7 +73,10 @@ namespace SimplyFly.Tests
 
             MakePaymentDto dto = new MakePaymentDto
             {
-                BookingId = 1
+                BookingId = 1,
+                PaymentMethod = "Card",
+                CardHolderName = "Test User",
+                CardNumber = "4111111111111111"
             };
 
             ApiResponse<object> result = _paymentService.MakePayment(dto);
@@ -89,7 +92,10 @@ namespace SimplyFly.Tests
         {
             MakePaymentDto dto = new MakePaymentDto
             {
-                BookingId = 999
+                BookingId = 999,
+                PaymentMethod = "Card",
+                CardHolderName = "Test User",
+                CardNumber = "4111111111111111"
             };
 
             var ex = Assert.Throws<BookingNotFoundException>(
@@ -124,7 +130,10 @@ namespace SimplyFly.Tests
 
             MakePaymentDto dto = new MakePaymentDto
             {
-                BookingId = 2
+                BookingId = 2,
+                PaymentMethod = "Card",
+                CardHolderName = "Test User",
+                CardNumber = "4111111111111111"
             };
 
             var ex = Assert.Throws<BookingAlreadyCancelledException>(
@@ -159,7 +168,10 @@ namespace SimplyFly.Tests
 
             MakePaymentDto dto = new MakePaymentDto
             {
-                BookingId = 3
+                BookingId = 3,
+                PaymentMethod = "Card",
+                CardHolderName = "Test User",
+                CardNumber = "4111111111111111"
             };
 
             var ex = Assert.Throws<PaymentAlreadyCompletedException>(
@@ -185,7 +197,9 @@ namespace SimplyFly.Tests
 
             MakePaymentDto dto = new MakePaymentDto
             {
-                BookingId = 4
+                BookingId = 4,
+                PaymentMethod = "UPI",
+                UpiId = "user@upi"
             };
 
             var ex = Assert.Throws<PaymentNotFoundException>(
@@ -220,13 +234,73 @@ namespace SimplyFly.Tests
 
             MakePaymentDto dto = new MakePaymentDto
             {
-                BookingId = 5
+                BookingId = 5,
+                PaymentMethod = "Card",
+                CardHolderName = "Test User",
+                CardNumber = "4111111111111111"
             };
 
             var ex = Assert.Throws<PaymentAlreadyCompletedException>(
                 new TestDelegate(() => _paymentService.MakePayment(dto)));
 
             Assert.That(ex!.Message, Is.EqualTo("Payment for booking 5 is already completed."));
+        }
+
+        [Test]
+        public void When_MakePayment_MultipleBookings_ConfirmsAllPayments()
+        {
+            _context.Bookings.AddRange(
+                new Booking
+                {
+                    Id = 6,
+                    UserId = 101,
+                    FlightId = 1,
+                    SeatNumber = "A6",
+                    BookingDate = DateTime.Now,
+                    Status = "PendingPayment"
+                },
+                new Booking
+                {
+                    Id = 7,
+                    UserId = 101,
+                    FlightId = 1,
+                    SeatNumber = "A7",
+                    BookingDate = DateTime.Now,
+                    Status = "PendingPayment"
+                });
+
+            _context.Payments.AddRange(
+                new Payment
+                {
+                    Id = 6,
+                    BookingId = 6,
+                    Amount = 5000,
+                    PaymentDate = DateTime.Now,
+                    Status = "Pending"
+                },
+                new Payment
+                {
+                    Id = 7,
+                    BookingId = 7,
+                    Amount = 5000,
+                    PaymentDate = DateTime.Now,
+                    Status = "Pending"
+                });
+
+            _context.SaveChanges();
+
+            var dto = new MakePaymentDto
+            {
+                BookingIds = new List<int> { 6, 7 },
+                PaymentMethod = "UPI",
+                UpiId = "user@upi"
+            };
+
+            var result = _paymentService.MakePayment(dto);
+
+            Assert.That(result.Success, Is.True);
+            Assert.That(_context.Bookings.Count(booking => booking.Status == "Confirmed"), Is.EqualTo(2));
+            Assert.That(_context.Payments.Count(payment => payment.Status == "Paid"), Is.EqualTo(2));
         }
     }
 }

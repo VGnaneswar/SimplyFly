@@ -1,5 +1,35 @@
 [
   {
+    "ContainingType": "SimplyFly.API.Controllers.AdminController",
+    "Method": "GetAllBookings",
+    "RelativePath": "api/Admin/bookings",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SimplyFly.API.Controllers.AdminController",
+    "Method": "GetAllPayments",
+    "RelativePath": "api/Admin/payments",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SimplyFly.API.Controllers.AdminController",
+    "Method": "GetAllUsers",
+    "RelativePath": "api/Admin/users",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "SimplyFly.API.Controllers.BookingsController",
     "Method": "BookFlight",
     "RelativePath": "api/Bookings",
@@ -25,6 +55,22 @@
     "Parameters": [
       {
         "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SimplyFly.API.Controllers.BookingsController",
+    "Method": "GetSeatMap",
+    "RelativePath": "api/Bookings/flight/{flightId}/seats",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "flightId",
         "Type": "System.Int32",
         "IsRequired": true
       }
@@ -84,6 +130,43 @@
         "Name": "sortBy",
         "Type": "System.String",
         "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SimplyFly.API.Controllers.FlightsController",
+    "Method": "UpdateFlight",
+    "RelativePath": "api/Flights/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "SimplyFly.API.DTOs.UpdateFlightDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SimplyFly.API.Controllers.FlightsController",
+    "Method": "GetFlightBookings",
+    "RelativePath": "api/Flights/{id}/bookings",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []

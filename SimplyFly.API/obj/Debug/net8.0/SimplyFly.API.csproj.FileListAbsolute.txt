@@ -138,7 +138,6 @@ C:\Users\gnane\source\repos\SimplyFly\SimplyFly.API\obj\Debug\net8.0\staticwebas
 C:\Users\gnane\source\repos\SimplyFly\SimplyFly.API\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\gnane\source\repos\SimplyFly\SimplyFly.API\obj\Debug\net8.0\staticwebassets.build.endpoints.json
 C:\Users\gnane\source\repos\SimplyFly\SimplyFly.API\obj\Debug\net8.0\swae.build.ex.cache
-C:\Users\gnane\source\repos\SimplyFly\SimplyFly.API\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\gnane\source\repos\SimplyFly\SimplyFly.API\obj\Debug\net8.0\SimplyFl.82AF1106.Up2Date
 C:\Users\gnane\source\repos\SimplyFly\SimplyFly.API\obj\Debug\net8.0\SimplyFly.API.dll
 C:\Users\gnane\source\repos\SimplyFly\SimplyFly.API\obj\Debug\net8.0\refint\SimplyFly.API.dll
@@ -159,3 +158,4 @@ C:\Users\gnane\source\repos\SimplyFly\SimplyFly.API\bin\Debug\net8.0\Microsoft.A
 C:\Users\gnane\source\repos\SimplyFly\SimplyFly.API\bin\Debug\net8.0\SimplyFly.API.xml
 C:\Users\gnane\source\repos\SimplyFly\SimplyFly.API\obj\Debug\net8.0\SimplyFly.API.xml
 C:\Users\gnane\source\repos\SimplyFly\SimplyFly.API\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.InMemory.dll
+C:\Users\gnane\source\repos\SimplyFly\SimplyFly.API\obj\Debug\net8.0\SimplyFly.API.sourcelink.json

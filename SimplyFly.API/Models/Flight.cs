@@ -21,6 +21,11 @@
         public int TotalSeats { get; set; }
 
         public int AvailableSeats { get; set; }
+
+        public int? FlightOwnerId { get; set; }
+
+        public User? FlightOwner { get; set; }
+
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
     }
 }

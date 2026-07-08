@@ -34,6 +34,18 @@ namespace SimplyFly.API.Controllers
         }
 
         /// <summary>
+        /// Gets the seat map for a flight so passengers can pick multiple seats.
+        /// </summary>
+        [AllowAnonymous]
+        [HttpGet("flight/{flightId}/seats")]
+        public IActionResult GetSeatMap(int flightId)
+        {
+            var result = _bookingService.GetSeatMap(flightId);
+
+            return Ok(result);
+        }
+
+        /// <summary>
         /// Get all booking history for the logged-in passenger
         /// </summary>
 
@@ -42,6 +54,15 @@ namespace SimplyFly.API.Controllers
         public IActionResult GetBookingHistory()
         {
             var result = _bookingService.GetBookingHistory(User);
+
+            return Ok(result);
+        }
+
+        [Authorize(Roles = "Passenger")]
+        [HttpGet("{id}")]
+        public IActionResult GetBookingDetails(int id)
+        {
+            var result = _bookingService.GetBookingDetails(id, User);
 
             return Ok(result);
         }

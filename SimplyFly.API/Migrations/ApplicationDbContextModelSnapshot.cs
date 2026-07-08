@@ -92,10 +92,15 @@ namespace SimplyFly.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("FlightOwnerId")
+                        .HasColumnType("int");
+
                     b.Property<int>("TotalSeats")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FlightOwnerId");
 
                     b.ToTable("Flights");
                 });
@@ -195,12 +200,21 @@ namespace SimplyFly.API.Migrations
 
             modelBuilder.Entity("SimplyFly.API.Models.Flight", b =>
                 {
+                    b.HasOne("SimplyFly.API.Models.User", "FlightOwner")
+                        .WithMany("OwnedFlights")
+                        .HasForeignKey("FlightOwnerId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.Navigation("Bookings");
+
+                    b.Navigation("FlightOwner");
                 });
 
             modelBuilder.Entity("SimplyFly.API.Models.User", b =>
                 {
                     b.Navigation("Bookings");
+
+                    b.Navigation("OwnedFlights");
                 });
 #pragma warning restore 612, 618
         }

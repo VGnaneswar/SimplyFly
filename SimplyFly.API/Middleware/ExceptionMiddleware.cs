@@ -49,6 +49,10 @@ namespace SimplyFly.API.Middleware
                 NoSeatsAvailableException => (int)HttpStatusCode.Conflict,
                 BookingAlreadyCancelledException => (int)HttpStatusCode.Conflict,
                 PaymentAlreadyCompletedException => (int)HttpStatusCode.Conflict,
+                PaymentWindowExpiredException => (int)HttpStatusCode.Conflict,
+
+                InvalidSeatSelectionException => (int)HttpStatusCode.BadRequest,
+                InvalidPaymentDetailsException => (int)HttpStatusCode.BadRequest,
 
                 _ => (int)HttpStatusCode.InternalServerError
             };

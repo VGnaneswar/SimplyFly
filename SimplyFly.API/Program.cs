@@ -25,6 +25,7 @@ namespace SimplyFly.API
             builder.Services.AddDbContext<ApplicationDbContext>(options =>options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IBookingService, BookingService>();
+            builder.Services.AddHostedService<BookingExpiryHostedService>();
             builder.Services.AddScoped<IFlightService, FlightService>();
             builder.Services.AddScoped<IPaymentService, PaymentService>();
             
@@ -109,6 +110,44 @@ namespace SimplyFly.API
             });
 
             var app = builder.Build();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<SimplyFly.API.Data.ApplicationDbContext>();
+                Microsoft.EntityFrameworkCore.RelationalDatabaseFacadeExtensions.Migrate(db.Database);
+
+                db.Database.ExecuteSqlRaw(@"
+                    IF COL_LENGTH('Flights', 'FlightOwnerId') IS NULL
+                    BEGIN
+                        ALTER TABLE [Flights] ADD [FlightOwnerId] int NULL;
+                    END;
+
+                    IF COL_LENGTH('Bookings', 'PaymentDeadline') IS NULL
+                    BEGIN
+                        ALTER TABLE [Bookings] ADD [PaymentDeadline] datetime2 NULL;
+                    END;
+
+                    IF NOT EXISTS (
+                        SELECT 1
+                        FROM sys.indexes
+                        WHERE name = N'IX_Flights_FlightOwnerId'
+                          AND object_id = OBJECT_ID(N'[Flights]')
+                    )
+                    BEGIN
+                        CREATE INDEX [IX_Flights_FlightOwnerId] ON [Flights] ([FlightOwnerId]);
+                    END;
+
+                    IF NOT EXISTS (
+                        SELECT 1
+                        FROM sys.foreign_keys
+                        WHERE name = N'FK_Flights_Users_FlightOwnerId'
+                    )
+                    BEGIN
+                        ALTER TABLE [Flights] WITH CHECK
+                        ADD CONSTRAINT [FK_Flights_Users_FlightOwnerId]
+                        FOREIGN KEY ([FlightOwnerId]) REFERENCES [Users] ([Id]) ON DELETE SET NULL;
+                    END;");
+            }
 
             
             if (app.Environment.IsDevelopment())

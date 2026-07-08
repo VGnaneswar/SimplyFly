@@ -13,5 +13,7 @@
         public string Role { get; set; } = "Passenger";
 
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+
+        public ICollection<Flight> OwnedFlights { get; set; } = new List<Flight>();
     }
 }

@@ -4,6 +4,42 @@
     "title": "SimplyFly.API"
   },
   "paths": {
+    "/api/Admin/users": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Admin/bookings": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Admin/payments": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Bookings": {
       "post": {
         "tags": [
@@ -29,6 +65,30 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Bookings/flight/{flightId}/seats": {
+      "get": {
+        "tags": [
+          "Bookings"
+        ],
+        "summary": "Gets the seat map for a flight so passengers can pick multiple seats.",
+        "parameters": [
+          {
+            "name": "flightId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -78,6 +138,7 @@
         "tags": [
           "Flights"
         ],
+        "summary": "Adds a new flight",
         "requestBody": {
           "content": {
             "application/json": {
@@ -138,6 +199,71 @@
             "in": "query",
             "schema": {
               "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Flights/{id}": {
+      "put": {
+        "tags": [
+          "Flights"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateFlightDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateFlightDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateFlightDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Flights/{id}/bookings": {
+      "get": {
+        "tags": [
+          "Flights"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -220,7 +346,9 @@
         "tags": [
           "Users"
         ],
+        "summary": "Registers a new user in the system",
         "requestBody": {
+          "description": "User registration details",
           "content": {
             "application/json": {
               "schema": {
@@ -379,10 +507,6 @@
         "additionalProperties": false
       },
       "BookFlightDto": {
-        "required": [
-          "flightId",
-          "seatNumber"
-        ],
         "type": "object",
         "properties": {
           "flightId": {
@@ -390,8 +514,15 @@
             "format": "int32"
           },
           "seatNumber": {
-            "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "nullable": true
+          },
+          "seatNumbers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -417,13 +548,37 @@
       },
       "MakePaymentDto": {
         "required": [
-          "bookingId"
+          "paymentMethod"
         ],
         "type": "object",
         "properties": {
           "bookingId": {
             "type": "integer",
             "format": "int32"
+          },
+          "bookingIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "paymentMethod": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "cardHolderName": {
+            "type": "string",
+            "nullable": true
+          },
+          "cardNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "upiId": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -453,6 +608,54 @@
           "role": {
             "minLength": 1,
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateFlightDto": {
+        "required": [
+          "arrivalTime",
+          "departureTime",
+          "destination",
+          "fare",
+          "flightName",
+          "flightNumber",
+          "origin",
+          "totalSeats"
+        ],
+        "type": "object",
+        "properties": {
+          "flightNumber": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "flightName": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "origin": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "destination": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "departureTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "arrivalTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fare": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalSeats": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false

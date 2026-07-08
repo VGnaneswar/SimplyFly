@@ -83,5 +83,26 @@ namespace SimplyFly.API.Services.Implementations
                 }
             };
         }
+
+        public ApiResponse<List<UserSummaryDto>> GetAllUsers()
+        {
+            var users = _context.Users
+                .OrderBy(u => u.FullName)
+                .Select(u => new UserSummaryDto
+                {
+                    Id = u.Id,
+                    FullName = u.FullName,
+                    Email = u.Email,
+                    Role = u.Role
+                })
+                .ToList();
+
+            return new ApiResponse<List<UserSummaryDto>>
+            {
+                Success = true,
+                Message = "Users fetched successfully",
+                Data = users
+            };
+        }
     }
 }

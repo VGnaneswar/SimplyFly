@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SimplyFly.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d70c2e64ae8addcc8b3f0f402907fbfb902f7bad")]
 [assembly: System.Reflection.AssemblyProductAttribute("SimplyFly.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SimplyFly.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

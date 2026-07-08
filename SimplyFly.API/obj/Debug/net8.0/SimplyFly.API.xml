@@ -9,6 +9,11 @@
             Books a flight for the logged-in passenger
             </summary>
         </member>
+        <member name="M:SimplyFly.API.Controllers.BookingsController.GetSeatMap(System.Int32)">
+            <summary>
+            Gets the seat map for a flight so passengers can pick multiple seats.
+            </summary>
+        </member>
         <member name="M:SimplyFly.API.Controllers.BookingsController.GetBookingHistory">
             <summary>
             Get all booking history for the logged-in passenger

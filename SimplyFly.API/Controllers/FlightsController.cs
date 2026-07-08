@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SimplyFly.API.DTOs;
 using SimplyFly.API.Services.Interfaces;
-using System.Globalization;
 
 namespace SimplyFly.API.Controllers
 {
@@ -21,13 +20,29 @@ namespace SimplyFly.API.Controllers
         /// <summary>
         /// Adds a new flight
         /// </summary>
-
-
         [Authorize(Roles = "Admin,FlightOwner")]
         [HttpPost]
         public IActionResult AddFlight(AddFlightDto dto)
         {
-            var result = _flightService.AddFlight(dto);
+            var result = _flightService.AddFlight(dto, User);
+
+            return Ok(result);
+        }
+
+        [Authorize(Roles = "Admin,FlightOwner")]
+        [HttpPut("{id}")]
+        public IActionResult UpdateFlight(int id, UpdateFlightDto dto)
+        {
+            var result = _flightService.UpdateFlight(id, dto, User);
+
+            return Ok(result);
+        }
+
+        [Authorize(Roles = "Admin,FlightOwner")]
+        [HttpGet("{id}/bookings")]
+        public IActionResult GetFlightBookings(int id)
+        {
+            var result = _flightService.GetBookingsForFlight(id, User);
 
             return Ok(result);
         }

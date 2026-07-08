@@ -232,3 +232,4 @@ C:\Users\gnane\source\repos\SimplyFly\SimplyFly.Tests\obj\Debug\net8.0\refint\Si
 C:\Users\gnane\source\repos\SimplyFly\SimplyFly.Tests\obj\Debug\net8.0\SimplyFly.Tests.pdb
 C:\Users\gnane\source\repos\SimplyFly\SimplyFly.Tests\obj\Debug\net8.0\SimplyFly.Tests.genruntimeconfig.cache
 C:\Users\gnane\source\repos\SimplyFly\SimplyFly.Tests\obj\Debug\net8.0\ref\SimplyFly.Tests.dll
+C:\Users\gnane\source\repos\SimplyFly\SimplyFly.Tests\obj\Debug\net8.0\SimplyFly.Tests.sourcelink.json

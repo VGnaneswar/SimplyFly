@@ -15,6 +15,8 @@ namespace SimplyFly.API.Models
 
         public DateTime BookingDate { get; set; }
 
+        public DateTime? PaymentDeadline { get; set; }
+
         public string Status { get; set; } = "PendingPayment";
 
         public User? User { get; set; }

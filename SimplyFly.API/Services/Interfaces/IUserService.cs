@@ -1,4 +1,4 @@
-﻿using SimplyFly.API.DTOs;
+using SimplyFly.API.DTOs;
 using SimplyFly.API.Models;
 
 namespace SimplyFly.API.Services.Interfaces
@@ -8,5 +8,7 @@ namespace SimplyFly.API.Services.Interfaces
         ApiResponse<User> Register(RegisterUserDto dto);
 
         ApiResponse<object> Login(LoginUserDto dto);
+
+        ApiResponse<List<UserSummaryDto>> GetAllUsers();
     }
 }

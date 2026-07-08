@@ -76,6 +76,23 @@ namespace SimplyFly.Tests
         }
 
         [Test]
+        public void When_BookFlight_MultipleSeats_CreatesMultipleBookingsAndPayments()
+        {
+            var dto = new BookFlightDto
+            {
+                FlightId = 1,
+                SeatNumbers = new List<string> { "A1", "A2", "A3" }
+            };
+
+            var result = _bookingService.BookFlight(dto, _user);
+
+            Assert.That(result.Success, Is.True);
+            Assert.That(_context.Bookings.Count(), Is.EqualTo(3));
+            Assert.That(_context.Payments.Count(), Is.EqualTo(3));
+            Assert.That(_context.Flights.First().AvailableSeats, Is.EqualTo(7));
+        }
+
+        [Test]
         public void When_BookFlight_InvalidFlight_ThrowsFlightNotFoundException()
         {
             var dto = new BookFlightDto

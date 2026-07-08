@@ -16,6 +16,12 @@ namespace SimplyFly.API.Data
             modelBuilder.Entity<Flight>().Property(f => f.Fare).HasColumnType("decimal(18,2)");
 
             modelBuilder.Entity<Payment>().Property(p => p.Amount).HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<Flight>()
+                .HasOne(f => f.FlightOwner)
+                .WithMany(u => u.OwnedFlights)
+                .HasForeignKey(f => f.FlightOwnerId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
 
         public DbSet<User> Users { get; set; }
