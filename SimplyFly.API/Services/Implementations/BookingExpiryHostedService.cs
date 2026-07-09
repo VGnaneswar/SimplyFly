@@ -31,7 +31,8 @@ namespace SimplyFly.API.Services.Implementations
                         .Include(booking => booking.Payment)
                         .Where(booking =>
                             booking.Status == "PendingPayment" &&
-                            (booking.PaymentDeadline == null || booking.PaymentDeadline <= now))
+                            booking.PaymentDeadline != null &&
+                            booking.PaymentDeadline <= now)
                         .ToListAsync(stoppingToken);
 
                     if (expiredBookings.Count > 0)
