@@ -63,6 +63,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Prepare lowercase image names
+        id: vars
+        run: |
+          OWNER=$(echo "${GITHUB_REPOSITORY_OWNER}" | tr '[:upper:]' '[:lower:]')
+          echo "backend_image=ghcr.io/${OWNER}/simplyfly-api" >> "$GITHUB_OUTPUT"
+          echo "frontend_image=ghcr.io/${OWNER}/simplyfly-frontend" >> "$GITHUB_OUTPUT"
+
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -77,8 +84,8 @@ jobs:
           file: ./SimplyFly.API/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/simplyfly-api:latest
-            ghcr.io/${{ github.repository_owner }}/simplyfly-api:${{ github.sha }}
+            ${{ steps.vars.outputs.backend_image }}:latest
+            ${{ steps.vars.outputs.backend_image }}:${{ github.sha }}
 
       - name: Build and push frontend image
         uses: docker/build-push-action@v6
@@ -87,5 +94,5 @@ jobs:
           file: ./Frontend/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/simplyfly-frontend:latest
-            ghcr.io/${{ github.repository_owner }}/simplyfly-frontend:${{ github.sha }}
+            ${{ steps.vars.outputs.frontend_image }}:latest
+            ${{ steps.vars.outputs.frontend_image }}:${{ github.sha }}
