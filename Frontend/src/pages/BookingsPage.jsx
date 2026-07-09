@@ -87,6 +87,12 @@ export default function BookingsPage() {
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
   const [seatError, setSeatError] = useState('')
+  const [paymentErrors, setPaymentErrors] = useState({
+    paymentMethod: '',
+    cardHolderName: '',
+    cardNumber: '',
+    upiId: '',
+  })
   const [selectedSeats, setSelectedSeats] = useState([])
   const [seatMapVisible, setSeatMapVisible] = useState(false)
 
@@ -276,9 +282,21 @@ export default function BookingsPage() {
       cardNumber: '',
       upiId: '',
     })
+    setPaymentErrors({
+      paymentMethod: '',
+      cardHolderName: '',
+      cardNumber: '',
+      upiId: '',
+    })
   }
 
   function validatePaymentForm() {
+    const nextErrors = {
+      paymentMethod: '',
+      cardHolderName: '',
+      cardNumber: '',
+      upiId: '',
+    }
     const paymentMethod = paymentForm.paymentMethod.trim()
 
     if (paymentMethod === 'Card') {
@@ -286,27 +304,27 @@ export default function BookingsPage() {
       const cardNumber = paymentForm.cardNumber.trim()
 
       if (!cardHolderName) {
-        return 'Enter the card holder name.'
+        nextErrors.cardHolderName = 'Enter the card holder name.'
       }
 
       if (cardNumber.length < 12 || cardNumber.length > 19 || !/^\d+$/.test(cardNumber)) {
-        return 'Enter a valid card number.'
+        nextErrors.cardNumber = 'Card number must be 12-19 digits.'
       }
     }
 
     if (paymentMethod === 'UPI') {
       const upiId = paymentForm.upiId.trim()
 
-      if (!upiId || !upiId.includes('@')) {
-        return 'Enter a valid UPI tag.'
+      if (!/^[A-Za-z0-9._-]+@[A-Za-z]+$/.test(upiId)) {
+        nextErrors.upiId = 'Enter a valid UPI ID like name@bank.'
       }
     }
 
     if (paymentMethod !== 'Card' && paymentMethod !== 'UPI') {
-      return 'Choose Card or UPI before paying.'
+      nextErrors.paymentMethod = 'Choose Card or UPI before paying.'
     }
 
-    return ''
+    return nextErrors
   }
 
   async function handleSelectSeatsClick() {
@@ -409,12 +427,22 @@ export default function BookingsPage() {
       return
     }
 
-    const validationError = validatePaymentForm()
-    if (validationError) {
-      setError(validationError)
+    const validationErrors = validatePaymentForm()
+    const hasValidationErrors = Object.values(validationErrors).some(Boolean)
+
+    if (hasValidationErrors) {
+      setPaymentErrors(validationErrors)
+      setError('Please fix the highlighted payment details.')
       setPaymentLoading(false)
       return
     }
+
+    setPaymentErrors({
+      paymentMethod: '',
+      cardHolderName: '',
+      cardNumber: '',
+      upiId: '',
+    })
 
     const paymentMethod = paymentForm.paymentMethod.trim()
 
@@ -676,7 +704,7 @@ export default function BookingsPage() {
           )}
         </section>
 
-        <form className="payment-card booking-card" onSubmit={handlePaymentSubmit}>
+        <form className="payment-card booking-card" noValidate onSubmit={handlePaymentSubmit}>
           <div className="section-heading section-heading--compact">
             <p className="eyebrow">Payment</p>
             <h3>Enter payment details and pay now</h3>
@@ -702,6 +730,12 @@ export default function BookingsPage() {
                   cardNumber: method === 'Card' ? current.cardNumber : '',
                   upiId: method === 'UPI' ? current.upiId : '',
                 }))
+                setPaymentErrors({
+                  paymentMethod: '',
+                  cardHolderName: '',
+                  cardNumber: '',
+                  upiId: '',
+                })
               }}
             >
               <option value="Card">Card</option>
@@ -717,6 +751,8 @@ export default function BookingsPage() {
                   type="text"
                   required
                   disabled={!isAuthenticated || pendingBookingIds.length === 0}
+                  minLength={2}
+                  autoComplete="cc-name"
                   value={paymentForm.cardHolderName}
                   onChange={(event) =>
                     setPaymentForm((current) => ({
@@ -726,45 +762,59 @@ export default function BookingsPage() {
                   }
                   placeholder="Name on card"
                 />
-              </label>
+              {paymentErrors.cardHolderName ? (
+                <p className="field-error">{paymentErrors.cardHolderName}</p>
+              ) : null}
+            </label>
 
-              <label>
-                <span>Card number</span>
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  maxLength="19"
-                  required
-                  disabled={!isAuthenticated || pendingBookingIds.length === 0}
-                  value={paymentForm.cardNumber}
-                  onChange={(event) =>
-                    setPaymentForm((current) => ({
-                      ...current,
-                      cardNumber: event.target.value.replace(/[^\d]/g, ''),
-                    }))
-                  }
-                  placeholder="4111111111111111"
-                />
-              </label>
-            </>
-          ) : (
             <label>
-              <span>UPI tag</span>
+              <span>Card number</span>
               <input
                 type="text"
+                inputMode="numeric"
+                maxLength="19"
+                pattern="^[0-9]{12,19}$"
                 required
                 disabled={!isAuthenticated || pendingBookingIds.length === 0}
-                value={paymentForm.upiId}
+                autoComplete="cc-number"
+                value={paymentForm.cardNumber}
                 onChange={(event) =>
                   setPaymentForm((current) => ({
                     ...current,
-                    upiId: event.target.value,
+                    cardNumber: event.target.value.replace(/[^\d]/g, ''),
                   }))
                 }
-                placeholder="name@bank"
+                placeholder="4111111111111111"
               />
+              {paymentErrors.cardNumber ? (
+                <p className="field-error">{paymentErrors.cardNumber}</p>
+              ) : null}
             </label>
-          )}
+          </>
+        ) : (
+          <label>
+            <span>UPI tag</span>
+            <input
+              type="text"
+              required
+              pattern="^[A-Za-z0-9._-]+@[A-Za-z]+$"
+              title="Use a valid UPI tag like name@bank"
+              disabled={!isAuthenticated || pendingBookingIds.length === 0}
+              autoComplete="off"
+              value={paymentForm.upiId}
+              onChange={(event) =>
+                setPaymentForm((current) => ({
+                  ...current,
+                  upiId: event.target.value,
+                }))
+              }
+              placeholder="name@bank"
+            />
+            {paymentErrors.upiId ? <p className="field-error">{paymentErrors.upiId}</p> : null}
+          </label>
+        )}
+
+          {paymentErrors.paymentMethod ? <p className="field-error">{paymentErrors.paymentMethod}</p> : null}
 
           {pendingBookingIds.length > 0 ? (
             <div className="booking-highlight booking-highlight--inline">

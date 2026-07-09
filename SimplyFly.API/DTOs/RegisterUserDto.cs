@@ -9,6 +9,7 @@ namespace SimplyFly.API.DTOs
 
         [Required]
         [EmailAddress]
+        [RegularExpression(@"^[^@\s]+@gmail\.com$", ErrorMessage = "Email must be a Gmail address.")]
         public string Email { get; set; } = string.Empty;
 
         [Required]

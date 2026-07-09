@@ -9,6 +9,18 @@ const apiClient = axios.create({
   },
 })
 
+function flattenValues(value) {
+  if (Array.isArray(value)) {
+    return value.flatMap((item) => flattenValues(item))
+  }
+
+  if (typeof value === 'string') {
+    return [value]
+  }
+
+  return []
+}
+
 apiClient.interceptors.request.use((config) => {
   const storedAuth = localStorage.getItem('simplyfly-auth')
   let authToken = ''
@@ -40,8 +52,20 @@ async function requestJson(path, options = {}) {
 
     return response.data
   } catch (error) {
+    const responseData = error?.response?.data
+    const modelStateMessages = responseData?.errors
+      ? Object.values(responseData.errors).flatMap((value) => flattenValues(value))
+      : []
+    const directMessages =
+      responseData && typeof responseData === 'object'
+        ? Object.values(responseData).flatMap((value) => flattenValues(value))
+        : []
     const message =
-      error?.response?.data?.message || error?.message || 'Request failed'
+      responseData?.message ||
+      modelStateMessages[0] ||
+      directMessages[0] ||
+      error?.message ||
+      'Request failed'
     throw new Error(message)
   }
 }

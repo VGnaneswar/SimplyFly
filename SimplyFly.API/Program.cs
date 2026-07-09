@@ -111,42 +111,54 @@ namespace SimplyFly.API
 
             var app = builder.Build();
 
-            using (var scope = app.Services.CreateScope())
+            const int migrationAttempts = 10;
+
+            for (var attempt = 1; attempt <= migrationAttempts; attempt++)
             {
-                var db = scope.ServiceProvider.GetRequiredService<SimplyFly.API.Data.ApplicationDbContext>();
-                Microsoft.EntityFrameworkCore.RelationalDatabaseFacadeExtensions.Migrate(db.Database);
+                try
+                {
+                    using var scope = app.Services.CreateScope();
+                    var db = scope.ServiceProvider.GetRequiredService<SimplyFly.API.Data.ApplicationDbContext>();
+                    Microsoft.EntityFrameworkCore.RelationalDatabaseFacadeExtensions.Migrate(db.Database);
 
-                db.Database.ExecuteSqlRaw(@"
-                    IF COL_LENGTH('Flights', 'FlightOwnerId') IS NULL
-                    BEGIN
-                        ALTER TABLE [Flights] ADD [FlightOwnerId] int NULL;
-                    END;
+                    db.Database.ExecuteSqlRaw(@"
+                        IF COL_LENGTH('Flights', 'FlightOwnerId') IS NULL
+                        BEGIN
+                            ALTER TABLE [Flights] ADD [FlightOwnerId] int NULL;
+                        END;
 
-                    IF COL_LENGTH('Bookings', 'PaymentDeadline') IS NULL
-                    BEGIN
-                        ALTER TABLE [Bookings] ADD [PaymentDeadline] datetime2 NULL;
-                    END;
+                        IF COL_LENGTH('Bookings', 'PaymentDeadline') IS NULL
+                        BEGIN
+                            ALTER TABLE [Bookings] ADD [PaymentDeadline] datetime2 NULL;
+                        END;
 
-                    IF NOT EXISTS (
-                        SELECT 1
-                        FROM sys.indexes
-                        WHERE name = N'IX_Flights_FlightOwnerId'
-                          AND object_id = OBJECT_ID(N'[Flights]')
-                    )
-                    BEGIN
-                        CREATE INDEX [IX_Flights_FlightOwnerId] ON [Flights] ([FlightOwnerId]);
-                    END;
+                        IF NOT EXISTS (
+                            SELECT 1
+                            FROM sys.indexes
+                            WHERE name = N'IX_Flights_FlightOwnerId'
+                              AND object_id = OBJECT_ID(N'[Flights]')
+                        )
+                        BEGIN
+                            CREATE INDEX [IX_Flights_FlightOwnerId] ON [Flights] ([FlightOwnerId]);
+                        END;
 
-                    IF NOT EXISTS (
-                        SELECT 1
-                        FROM sys.foreign_keys
-                        WHERE name = N'FK_Flights_Users_FlightOwnerId'
-                    )
-                    BEGIN
-                        ALTER TABLE [Flights] WITH CHECK
-                        ADD CONSTRAINT [FK_Flights_Users_FlightOwnerId]
-                        FOREIGN KEY ([FlightOwnerId]) REFERENCES [Users] ([Id]) ON DELETE SET NULL;
-                    END;");
+                        IF NOT EXISTS (
+                            SELECT 1
+                            FROM sys.foreign_keys
+                            WHERE name = N'FK_Flights_Users_FlightOwnerId'
+                        )
+                        BEGIN
+                            ALTER TABLE [Flights] WITH CHECK
+                            ADD CONSTRAINT [FK_Flights_Users_FlightOwnerId]
+                            FOREIGN KEY ([FlightOwnerId]) REFERENCES [Users] ([Id]) ON DELETE SET NULL;
+                        END;");
+
+                    break;
+                }
+                catch when (attempt < migrationAttempts)
+                {
+                    Thread.Sleep(TimeSpan.FromSeconds(3));
+                }
             }
 
             
@@ -156,7 +168,10 @@ namespace SimplyFly.API
                 app.UseSwaggerUI();
             }
 
-            app.UseHttpsRedirection();
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseHttpsRedirection();
+            }
 
             app.UseMiddleware<LoggingMiddleware>();
             app.UseMiddleware<ExceptionMiddleware>();

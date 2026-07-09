@@ -21,8 +21,47 @@ export default function AuthPage() {
     role: 'Passenger',
   })
 
+  function isGmailAddress(value) {
+    return /^[^@\s]+@gmail\.com$/i.test(String(value ?? '').trim())
+  }
+
+  function validateLoginForm() {
+    if (!isGmailAddress(loginForm.email)) {
+      return 'Please use a Gmail address like name@gmail.com.'
+    }
+
+    if (loginForm.password.trim().length < 6) {
+      return 'Password must be at least 6 characters.'
+    }
+
+    return ''
+  }
+
+  function validateRegisterForm() {
+    if (!registerForm.fullName.trim()) {
+      return 'Please enter your full name.'
+    }
+
+    if (!isGmailAddress(registerForm.email)) {
+      return 'Please register with a Gmail address like name@gmail.com.'
+    }
+
+    if (registerForm.password.trim().length < 6) {
+      return 'Password must be at least 6 characters.'
+    }
+
+    return ''
+  }
+
   async function handleLoginSubmit(event) {
     event.preventDefault()
+    const validationError = validateLoginForm()
+
+    if (validationError) {
+      setError(validationError)
+      return
+    }
+
     setLoading(true)
     setError('')
     setMessage('')
@@ -40,6 +79,13 @@ export default function AuthPage() {
 
   async function handleRegisterSubmit(event) {
     event.preventDefault()
+    const validationError = validateRegisterForm()
+
+    if (validationError) {
+      setError(validationError)
+      return
+    }
+
     setLoading(true)
     setError('')
     setMessage('')
@@ -115,6 +161,9 @@ export default function AuthPage() {
                 type="email"
                 name="email"
                 required
+                pattern="^[^@\s]+@gmail\.com$"
+                title="Use a Gmail address like name@gmail.com"
+                autoComplete="email"
                 value={loginForm.email}
                 onChange={(event) =>
                   setLoginForm((current) => ({
@@ -131,6 +180,7 @@ export default function AuthPage() {
                 name="password"
                 required
                 minLength={6}
+                autoComplete="current-password"
                 value={loginForm.password}
                 onChange={(event) =>
                   setLoginForm((current) => ({
@@ -152,6 +202,7 @@ export default function AuthPage() {
                 type="text"
                 name="fullName"
                 required
+                autoComplete="name"
                 value={registerForm.fullName}
                 onChange={(event) =>
                   setRegisterForm((current) => ({
@@ -167,6 +218,9 @@ export default function AuthPage() {
                 type="email"
                 name="email"
                 required
+                pattern="^[^@\s]+@gmail\.com$"
+                title="Use a Gmail address like name@gmail.com"
+                autoComplete="email"
                 value={registerForm.email}
                 onChange={(event) =>
                   setRegisterForm((current) => ({
@@ -183,6 +237,7 @@ export default function AuthPage() {
                 name="password"
                 required
                 minLength={6}
+                autoComplete="new-password"
                 value={registerForm.password}
                 onChange={(event) =>
                   setRegisterForm((current) => ({

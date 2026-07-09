@@ -159,3 +159,16 @@ C:\Users\gnane\source\repos\SimplyFly\SimplyFly.API\bin\Debug\net8.0\SimplyFly.A
 C:\Users\gnane\source\repos\SimplyFly\SimplyFly.API\obj\Debug\net8.0\SimplyFly.API.xml
 C:\Users\gnane\source\repos\SimplyFly\SimplyFly.API\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.InMemory.dll
 C:\Users\gnane\source\repos\SimplyFly\SimplyFly.API\obj\Debug\net8.0\SimplyFly.API.sourcelink.json
+C:\Users\gnane\AppData\Local\Temp\simplyfly-build\Debug\net8.0\appsettings.Development.json
+C:\Users\gnane\AppData\Local\Temp\simplyfly-build\Debug\net8.0\appsettings.json
+C:\Users\gnane\AppData\Local\Temp\simplyfly-build\Debug\net8.0\bin\Debug\net8.0\appsettings.Development.json
+C:\Users\gnane\AppData\Local\Temp\simplyfly-build\Debug\net8.0\bin\Debug\net8.0\appsettings.json
+C:\Users\gnane\AppData\Local\Temp\simplyfly-build\Debug\net8.0\bin\Debug\net8.0\SimplyFly.API.deps.json
+C:\Users\gnane\AppData\Local\Temp\simplyfly-build\Debug\net8.0\bin\Debug\net8.0\SimplyFly.API.runtimeconfig.json
+C:\Users\gnane\AppData\Local\Temp\simplyfly-build\Debug\net8.0\bin\Debug\net8.0\SimplyFly.API.staticwebassets.endpoints.json
+C:\Users\gnane\AppData\Local\Temp\simplyfly-build\Debug\net8.0\SimplyFly.API.staticwebassets.endpoints.json
+C:\Users\gnane\AppData\Local\Temp\simplyfly-build\Debug\net8.0\SimplyFly.API.deps.json
+C:\Users\gnane\AppData\Local\Temp\simplyfly-build\Debug\net8.0\SimplyFly.API.runtimeconfig.json
+C:\Users\gnane\AppData\Local\Temp\simplyfly-build\Debug\net8.0\SimplyFly.API.dll
+C:\Users\gnane\AppData\Local\Temp\simplyfly-build\Debug\net8.0\SimplyFly.API.pdb
+C:\Users\gnane\AppData\Local\Temp\simplyfly-build\Debug\net8.0\SimplyFly.API.xml
