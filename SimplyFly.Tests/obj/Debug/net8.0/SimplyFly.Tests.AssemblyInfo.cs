@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SimplyFly.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+86f4c696e362cc3ec51926df0b4d722ce9c7f646")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+39d554c7b175d3b546d60e46ab4eb119f46c27ed")]
 [assembly: System.Reflection.AssemblyProductAttribute("SimplyFly.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SimplyFly.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

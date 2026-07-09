@@ -1,0 +1,91 @@
+name: CI-CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore backend packages
+        run: dotnet restore SimplyFly.slnx
+
+      - name: Build backend
+        run: dotnet build SimplyFly.slnx --configuration Release --no-restore
+
+      - name: Run backend tests
+        run: dotnet test SimplyFly.Tests/SimplyFly.Tests.csproj --configuration Release --no-build --verbosity normal
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: Frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: Frontend
+        run: npm ci
+
+      - name: Build frontend
+        working-directory: Frontend
+        run: npm run build
+
+      - name: Build backend Docker image
+        run: docker build -f SimplyFly.API/Dockerfile -t simplyfly-api:test .
+
+      - name: Build frontend Docker image
+        working-directory: Frontend
+        run: docker build -f Dockerfile -t simplyfly-frontend:test .
+
+  publish-images:
+    needs: build-test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push backend image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./SimplyFly.API/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/simplyfly-api:latest
+            ghcr.io/${{ github.repository_owner }}/simplyfly-api:${{ github.sha }}
+
+      - name: Build and push frontend image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./Frontend
+          file: ./Frontend/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/simplyfly-frontend:latest
+            ghcr.io/${{ github.repository_owner }}/simplyfly-frontend:${{ github.sha }}
